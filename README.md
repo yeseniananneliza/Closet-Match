@@ -2,7 +2,7 @@
 
 Outfit ideas matched to your body shape, undertone and style, built from the clothes you already own.
 
-**Live site:** https://yeseniananneliza.github.io/Closet-Match/?v=2
+**Live site:** https://yeseniananneliza.github.io/Closet-Match/
 
 ## What it does
 - Pick your body shape, undertone and favorite styles to get a personalized "For you" board
