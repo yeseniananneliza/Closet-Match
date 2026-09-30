@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Closet Match — Outfit planner</title>
+  <style>
+    :root{--ink:#1f2430;--muted:#737985;--paper:#fbfaf8;--card:#fff;--line:#e9e6e2;--accent:#b52f73;--accent-dark:#8e2459;--owned:#2d8060;--shadow:0 18px 48px rgba(32,29,35,.08)}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
+    button,input{font:inherit} button{cursor:pointer}.topbar{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:30px;padding:0 5vw;position:sticky;top:0;z-index:4}.brand{font-family:Georgia,serif;font-size:24px;letter-spacing:-.5px;color:var(--accent);white-space:nowrap}.nav{display:flex;gap:22px;align-items:center}.nav button{border:0;background:none;color:var(--muted);padding:26px 0;border-bottom:2px solid transparent}.nav button.active,.nav button:hover{color:var(--ink);border-color:var(--accent)}.actions{margin-left:auto;display:flex;align-items:center;gap:12px}.search{border:1px solid var(--line);background:#fafafa;border-radius:999px;padding:10px 15px;width:235px;outline:none}.search:focus{border-color:var(--accent);box-shadow:0 0 0 3px #b52f7318}.outline,.primary{border-radius:999px;padding:10px 16px;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:650}.primary{border-color:var(--accent);background:var(--accent);color:#fff}.primary:hover{background:var(--accent-dark)}.outline:hover{border-color:var(--accent);color:var(--accent)}
+    main{max-width:1240px;margin:auto;padding:42px 5vw 72px}.hero{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;color:var(--accent);margin:0 0 8px}.hero h1{font:normal clamp(38px,5vw,62px)/1.02 Georgia,serif;letter-spacing:-2px;margin:0 0 12px}.hero p{color:var(--muted);max-width:580px;margin:0}.profile{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.profile span{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:13px}.profile b{color:var(--accent);font-weight:700}
+    .onboarding{background:#252733;color:#fff;border-radius:22px;padding:24px 26px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 32px;box-shadow:var(--shadow)}.onboarding h2{font:normal 25px Georgia,serif;margin:0 0 4px}.onboarding p{color:#d8d9de;margin:0;font-size:14px}.onboarding .primary{background:#fff;color:var(--ink);border-color:#fff}.onboarding .primary:hover{background:#f2e7ed}.onboarding .outline{background:transparent;border-color:#717583;color:#fff}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:0 0 15px}.section-head h2{font:normal 30px Georgia,serif;margin:0;letter-spacing:-.6px}.section-head p{margin:4px 0 0;color:var(--muted);font-size:14px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:25px}.filter{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:9px 14px}.filter:hover,.filter.selected{color:var(--accent-dark);border-color:#d993b5;background:#fff7fb}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.outfit{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.2s;position:relative}.outfit:hover{transform:translateY(-3px);box-shadow:var(--shadow)}.photo{height:285px;overflow:hidden;position:relative;background:#eee}.photo img{height:100%;width:100%;object-fit:cover;display:block;transition:transform .35s}.outfit:hover .photo img{transform:scale(1.035)}.save{position:absolute;right:12px;top:12px;border:0;background:#fff;color:var(--ink);border-radius:50%;width:36px;height:36px;font-size:18px;box-shadow:0 4px 14px #0002}.save.saved{color:var(--accent)}.owned-badge{position:absolute;bottom:12px;left:12px;background:#fff;color:var(--owned);font-size:12px;font-weight:750;border-radius:999px;padding:6px 9px}.card-body{padding:16px}.card-top{display:flex;justify-content:space-between;gap:8px}.card-top h3{font-size:16px;margin:0;font-weight:750}.card-top span{font-size:12px;color:var(--muted);white-space:nowrap}.meta{color:var(--muted);font-size:13px;margin:6px 0 12px}.progress{height:5px;background:#eee;border-radius:9px;overflow:hidden;margin-bottom:12px}.progress i{display:block;background:var(--owned);height:100%;border-radius:9px}.card-actions{display:flex;justify-content:space-between;align-items:center;gap:10px}.why{font-size:12px;color:var(--accent-dark);background:none;border:0;padding:0}.detail{font-size:12px;color:var(--ink);background:none;border:0;padding:0;font-weight:700}.empty{display:none;text-align:center;background:#fff;border:1px dashed #d9d4d0;border-radius:18px;padding:42px 20px;color:var(--muted)}.empty strong{display:block;color:var(--ink);font-family:Georgia,serif;font-size:23px;margin-bottom:7px}
+    .modal-wrap{display:none;position:fixed;inset:0;background:#17182199;z-index:8;padding:20px;align-items:center;justify-content:center}.modal-wrap.show{display:flex}.modal{background:#fff;border-radius:20px;max-width:540px;width:100%;padding:25px;box-shadow:0 30px 80px #0004}.modal h2{font:normal 30px Georgia,serif;margin:0 0 8px}.modal p{color:var(--muted)}.modal ul{padding-left:20px;color:var(--muted)}.close{float:right;border:0;background:#f5f3f2;border-radius:50%;width:32px;height:32px;font-size:18px}.note{font-size:12px;color:var(--muted);margin-top:30px}
+    @media(max-width:900px){.topbar{gap:16px;padding:0 20px}.nav{gap:12px}.search{width:170px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{align-items:start;flex-direction:column}.profile{justify-content:flex-start}.onboarding{align-items:flex-start;flex-direction:column}}
+    @media(max-width:620px){.topbar{height:auto;min-height:70px;flex-wrap:wrap;padding:14px 18px}.nav{order:3;width:100%;overflow:auto}.nav button{padding:5px 0 12px;white-space:nowrap}.actions{margin-left:auto}.search{display:none}main{padding:30px 18px}.grid{grid-template-columns:1fr}.photo{height:330px}.hero h1{font-size:44px}.onboarding{padding:21px}.section-head{align-items:start;flex-direction:column}}
+  </style>
+  <style>
+    .profile button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:13px;color:var(--ink);cursor:pointer}.profile button:hover{border-color:var(--accent);box-shadow:0 0 0 3px #b52f7318}
+    .choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:18px 0}.choice{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px;text-align:left;color:var(--ink)}.choice:hover{border-color:var(--accent);color:var(--accent-dark)}
+  </style>
+  <style>
+    /* header: keep labels on one line and let the search shrink first */
+    .nav button,.actions button{white-space:nowrap}
+    .brand,.nav{flex:none}
+    .actions{flex:1;min-width:0;justify-content:flex-end}
+    .search{flex:0 1 235px;min-width:110px;width:auto}
+    @media(max-width:1100px){.topbar{gap:20px;padding:0 3vw}.nav{gap:16px}}
+    @media(max-width:760px){.search{display:none}}
+    @media(max-width:620px){.actions{flex:0 1 auto;gap:8px}.actions .outline{padding:8px 12px;font-size:14px}}
+    .filters[hidden],[hidden]{display:none!important}
+    .photo.fallback{display:flex;align-items:center;justify-content:center;background:#f3e9ee;color:var(--accent-dark);font:normal 22px Georgia,serif;text-align:center;padding:20px}
+    .photo.fallback img{display:none}.photo.fallback .owned-badge{font:750 12px Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}
+    .modal h3{font-size:13px;margin:18px 0 6px;color:var(--ink)}
+    .pieces{list-style:none;padding:0!important;margin:0}.pieces li{padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:8px}.pieces li:last-child{border-bottom:0}
+    .pieces .have::before{content:"✓";color:var(--owned);font-weight:800}.pieces .need::before{content:"+";color:var(--accent);font-weight:800}
+    .choice[aria-pressed="true"]{border-color:var(--accent);background:#fff7fb;color:var(--accent-dark);font-weight:700}
+    .onboarding button[aria-pressed="true"]{outline:2px solid #fff;outline-offset:2px}
+    .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#252733;color:#fff;padding:12px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:9}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .credit{font-size:12px;color:var(--muted);margin-top:30px}.credit a{color:inherit}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+  </style>
+  <style>
+    .boards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0 18px}
+    .board{border:1px solid var(--line);background:#fff;border-radius:14px;padding:0;overflow:hidden;text-align:left;color:var(--ink);position:relative}
+    .board img{display:block;width:100%;height:96px;object-fit:cover;background:#f3e9ee}
+    .board span{display:block;padding:9px 11px 10px;font-size:13px}.board small{display:block;color:var(--muted);font-size:12px}
+    .board::after{content:"";position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:#fffc;border:1px solid var(--line)}
+    .board[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px #b52f7333}
+    .board[aria-pressed="true"]::after{content:"✓";background:var(--accent);border-color:var(--accent);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center}
+    .modal-actions{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .linkish{border:0;background:none;color:var(--muted);text-decoration:underline;padding:0;font-size:13px}
+    .demo-tag{display:inline-block;font-size:11px;font-weight:750;color:var(--accent-dark);background:#fff7fb;border:1px solid #efc6da;border-radius:999px;padding:3px 8px;margin-left:8px;vertical-align:middle}
+    .connect-panel{text-align:center;background:#fff;border:1px dashed #d9d4d0;border-radius:18px;padding:48px 20px}
+    .connect-panel strong{display:block;font:normal 26px Georgia,serif;margin-bottom:8px}.connect-panel p{color:var(--muted);max-width:460px;margin:0 auto}
+    .loading{color:var(--muted);padding:18px 0}.modal{max-height:calc(100vh - 40px);overflow:auto}
+    .meta .from{color:var(--accent-dark)}
+    @media(max-width:620px){.boards{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Closet Match</div>
+    <nav class="nav" aria-label="Primary navigation">
+      <button type="button" class="active" data-view="foryou" aria-current="page">For you</button>
+      <button type="button" data-view="explore">All pins</button>
+      <button type="button" data-view="saved">Saved</button>
+    </nav>
+    <div class="actions"><input class="search" id="search" type="search" placeholder="Search your looks" aria-label="Search your looks" /><button type="button" class="outline" id="pinBtn">Connect Pinterest</button><button type="button" class="outline" id="closetBtn">My closet · <span id="closetCount">0</span></button></div>
+  </header>
+  <main>
+    <section class="hero"><div><p class="eyebrow">Your boards, your closet</p><h1>Outfits from your pins</h1><p>Link your Pinterest boards and we'll turn the looks you save into outfits, then show exactly which pieces you already own.</p></div>
+      <div class="profile"><button type="button" class="profile-choice" data-type="shape">Shape · <b id="shapeValue">Hourglass</b></button><button type="button" class="profile-choice" data-type="undertone">Undertone · <b id="undertoneValue">Neutral</b></button></div></section>
+    <section class="onboarding" id="onboarding"></section>
+    <section aria-labelledby="listTitle"><div class="section-head"><div><h2 id="listTitle">Recommended looks</h2><p id="listSub" aria-live="polite"></p></div><button type="button" class="outline" id="occasionBtn">Filter by occasion</button></div>
+      <div class="filters" id="filters" role="group" aria-label="Style and occasion filters"></div>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty"><strong id="emptyTitle"></strong><span id="emptyText"></span></div>
+      <div class="connect-panel" id="connectPanel"><strong>Your looks will appear here</strong><p>Connect Pinterest and pick the boards you want. Each pin becomes a look, tagged by style and occasion and matched against your closet.</p></div>
+      <p class="credit">Demo pins use photos from <a href="https://unsplash.com/?utm_source=closet_match&amp;utm_medium=referral" target="_blank" rel="noopener">Unsplash</a>. Not affiliated with Pinterest.</p>
+    </section>
+  </main>
+  <div class="modal-wrap" id="modal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button type="button" class="close" id="close" aria-label="Close">×</button><h2 id="modalTitle"></h2><div id="modalBody"></div></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+  /* ------------------------------------------------------------------
+     Pinterest source. This demo returns a sample account's boards.
+     Real version: replace these three methods with calls to your own
+     backend, which handles Pinterest OAuth and calls
+       GET /v5/boards  and  GET /v5/boards/{board_id}/pins
+     with the user's access token (the client secret never reaches the page).
+     ------------------------------------------------------------------ */
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const DEMO_BOARDS = [
+    {id:"work",    name:"Workwear inspo"},
+    {id:"weekend", name:"Weekend uniform"},
+    {id:"date",    name:"Date night"},
+    {id:"travel",  name:"Travel outfits"},
+    {id:"summer",  name:"Summer & events"}
+  ];
+  /* Sample pins. Photos: free Unsplash License (images.unsplash.com, not Unsplash+). */
+  const DEMO_PINS = [
+    {id:"p1",  board:"work",    photo:"1517445312882-bc9910d016b7", credit:"MARK ADRIANE", title:"Soft neutral office look", description:"cream silk blouse tucked into beige wide-leg trousers. minimal capsule workwear", alt:"Woman in a pale button-up blouse and high-waisted beige wide-leg trousers"},
+    {id:"p2",  board:"work",    photo:"1779406166699-662a041a12a9", credit:"ola szkolda", title:"Oat blazer and white shirt", description:"oversized oat blazer and matching tailored trousers over a crisp white shirt. neutral office outfit", alt:"Woman in a beige oversized blazer and matching trousers over a white shirt"},
+    {id:"p3",  board:"work",    photo:"1762793193313-aaa68a33c54b", credit:"sammy swae", title:"Navy power suit", description:"navy double-breasted suit for a big meeting. classic and polished", alt:"Person in a navy double-breasted suit by the sea"},
+    {id:"p4",  board:"work",    photo:"1729575854260-337489d347c8", credit:"Julio Lopez", title:"Tan blazer for presentations", description:"tan cropped blazer with black trousers for client presentations. polished workwear", alt:"Woman seen from behind in a tan cropped blazer and black trousers"},
+    {id:"p5",  board:"weekend", photo:"1607016246338-789653d9cc55", credit:"Marek Mucha", title:"White shirt and jeans", description:"white shirt, skinny jeans and white sneakers. classic everyday casual", alt:"Woman in a white shirt, blue skinny jeans and white sneakers"},
+    {id:"p6",  board:"weekend", photo:"1626854586365-94312f94c8e5", credit:"Vladislav Filippov", title:"Cozy knit weekend", description:"chunky cream knit sweater with light-wash jeans. neutral weekend", alt:"Woman in a chunky cream knit sweater and light-wash jeans on a beach"},
+    {id:"p7",  board:"weekend", photo:"1777809547553-bc727710ca01", credit:"Tima Ilyasov", title:"Hoodie coffee run", description:"oversized gray hoodie and jeans for a coffee run. minimal casual", alt:"Person in an oversized charcoal-gray hoodie and light-wash jeans"},
+    {id:"p8",  board:"weekend", photo:"1779406166172-06b0376d7f2e", credit:"ola szkolda", title:"Cobalt knit set for brunch", description:"bright cobalt knit set with red trim for brunch. bold color", alt:"Woman in a bright blue knit top with red trim and matching blue knit pants"},
+    {id:"p9",  board:"date",    photo:"1765870972591-31948b3cdcab", credit:"FOTOGRAFÍA EDITORIAL", title:"Black satin evening", description:"black satin off-shoulder evening dress with a slit and heels. classic dinner date", alt:"Woman in a black satin off-shoulder evening dress with a leg slit"},
+    {id:"p10", board:"date",    photo:"1786053287012-10145e1bd066", credit:"César O'neill", title:"Leather skirt night out", description:"black cropped sweater with a leather skirt for drinks. edgy bold night out", alt:"Woman at night in a black cropped sweater and black leather skirt"},
+    {id:"p11", board:"travel",  photo:"1676716105765-e19fe6a01851", credit:"Amir Asghari", title:"Camel trench for travel", description:"long belted camel trench coat with jeans. classic travel layer", alt:"Woman in a long belted camel trench coat"},
+    {id:"p12", board:"travel",  photo:"1766056278792-d5b15656b7e8", credit:"MANITO SILK", title:"Airport lounge knit", description:"beige knit sweater and matching lounge pants for the airport. neutral and comfy", alt:"Person in a cozy beige knit sweater and matching lounge pants"},
+    {id:"p13", board:"travel",  photo:"1697914584686-2f04d4b5a528", credit:"Anna Keibalo", title:"Breton and trench city break", description:"striped breton top under a beige trench coat for a city break. classic", alt:"Woman in a navy-and-white striped Breton top under a beige trench coat"},
+    {id:"p14", board:"summer",  photo:"1784048089795-0bf17c9d8913", credit:"Zulfugar Karimov", title:"All-white linen", description:"white linen shirt, linen wide-leg trousers, sandals and a straw hat. minimal summer vacation", alt:"Person in a white linen shirt, white wide-leg linen trousers, flat sandals and a straw hat"},
+    {id:"p15", board:"summer",  photo:"1762154057377-cc9d3dd6900c", credit:"Sanskrutihomes", title:"Floral wedding guest", description:"cream floral midi dress with strappy sandals for a summer wedding. classic guest look", alt:"Woman in a cream floral midi sundress with thin straps and strappy sandals"},
+    {id:"p16", board:"summer",  photo:"1765229279658-7335ee3cdaf5", credit:"FOTOGRAFÍA EDITORIAL", title:"Red satin cocktail gown", description:"red satin gown with a thigh-high slit for a cocktail party. bold statement", alt:"Woman in a floor-length red satin V-neck gown with a thigh-high slit"}
+  ];
+  const PinterestSource = {
+    async connect(){ await wait(700); return {username:"closetmatch.demo"}; },
+    async listBoards(){ await wait(300); return DEMO_BOARDS.map(b => ({...b, pinCount: DEMO_PINS.filter(p => p.board === b.id).length, cover: DEMO_PINS.find(p => p.board === b.id).photo})); },
+    async listPins(boardIds){ await wait(600); return DEMO_PINS.filter(p => boardIds.includes(p.board)); }
+  };
+
+  /* ---------- turning pins into looks ---------- */
+  const STYLES = {
+    minimalist:{label:"Minimalist", words:["minimal","neutral","capsule","cream","beige","oat","monochrome"]},
+    classic:   {label:"Classic",    words:["classic","tailored","polished","navy","trench","breton","timeless"]},
+    bold:      {label:"Bold",       words:["bold","bright","cobalt","red","leather","edgy","statement"]}
+  };
+  const OCCASIONS = {
+    work:  {label:"Work",       words:["office","workwear","meeting","presentation"]},
+    casual:{label:"Casual",     words:["weekend","everyday","casual","coffee","brunch"]},
+    date:  {label:"Date night", words:["date","drinks","night out","dinner"]},
+    travel:{label:"Travel",     words:["travel","airport","city break","vacation"]},
+    event: {label:"Event",      words:["wedding","cocktail","party","gala"]}
+  };
+  const BOARD_OCCASION = {work:"work", weekend:"casual", date:"date", travel:"travel", summer:"event"};
+  /* Order matters: specific phrases first; each match is removed before the next rule runs. */
+  const PIECES = [
+    ["Linen shirt",/linen shirt/], ["Linen trousers",/linen (wide-leg )?trousers/], ["Straw hat",/straw hat/],
+    ["Silk blouse",/(silk )?blouse/], ["Wide-leg trousers",/wide-leg trousers/], ["Tailored trousers",/(tailored|black) trousers/],
+    ["Blazer",/blazer/], ["Suit",/\bsuit\b/], ["White shirt",/white shirt/], ["Jeans",/jeans/], ["White sneakers",/sneakers/],
+    ["Cropped sweater",/cropped sweater/], ["Knit set",/knit set/], ["Knit sweater",/knit sweater/], ["Lounge pants",/lounge pants/],
+    ["Hoodie",/hoodie/], ["Trench coat",/trench/], ["Breton top",/breton/], ["Leather skirt",/leather skirt/],
+    ["Black satin dress",/black satin/], ["Red satin gown",/red satin/], ["Floral midi dress",/floral midi/],
+    ["Sandals",/sandals/], ["Heels",/heels/]
+  ];
+  const has = (text, w) => new RegExp(`\\b${w}\\b`).test(text);
+  function pinToLook(pin){
+    const text = `${pin.title} ${pin.description}`.toLowerCase();
+    const styles = Object.keys(STYLES).filter(k => STYLES[k].words.some(w => has(text, w)));
+    const occasion = Object.keys(OCCASIONS).find(k => OCCASIONS[k].words.some(w => has(text, w))) || BOARD_OCCASION[pin.board];
+    let rest = text; const pieces = [];
+    for (const [name, re] of PIECES) if (re.test(rest)) { pieces.push(name); rest = rest.replace(re, " "); }
+    return {...pin, styles, occasion, tags:[...styles, occasion], pieces};
+  }
+
+  /* ---------- state (kept in the browser when allowed) ---------- */
+  const store = {
+    get(k, d){ try { const v = localStorage.getItem("cm:" + k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
+    set(k, v){ try { localStorage.setItem("cm:" + k, JSON.stringify(v)); } catch(e){} }
+  };
+  const SAMPLE_CLOSET = ["Silk blouse","Wide-leg trousers","White shirt","Jeans","White sneakers","Knit sweater","Trench coat","Breton top","Sandals","Heels","Tailored trousers"];
+  const state = {
+    account: store.get("account", null), boards: [], selected: store.get("boards", []), looks: [],
+    closet: new Set(store.get("closet", SAMPLE_CLOSET)), saved: new Set(store.get("saved", [])),
+    filters: new Set(), view: "foryou", query: "", shape: store.get("shape","Hourglass"), undertone: store.get("undertone","Neutral"), shopping: new Set()
+  };
+  const save = () => { store.set("account", state.account); store.set("boards", state.selected); store.set("closet", [...state.closet]); store.set("saved", [...state.saved]); store.set("shape", state.shape); store.set("undertone", state.undertone); };
+
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const img = (id,w,h) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${h}&q=75`;
+  const owned = o => o.pieces.filter(p => state.closet.has(p));
+  const missing = o => o.pieces.filter(p => !state.closet.has(p));
+  const boardName = id => (DEMO_BOARDS.find(b => b.id === id) || {}).name || "";
+  const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+
+  function styleCounts(){ const c = {}; for (const k in STYLES) c[k] = state.looks.filter(l => l.styles.includes(k)).length; return c; }
+  function topStyles(){ const c = styleCounts(); const max = Math.max(0, ...Object.values(c)); return Object.keys(c).filter(k => c[k] > 0).sort((a,b) => c[b]-c[a]).slice(0, 2); }
+
+  /* ---------- rendering ---------- */
+  function card(o){
+    const have = owned(o).length, total = o.pieces.length, isSaved = state.saved.has(o.id);
+    const styleText = o.styles.map(s => STYLES[s].label).join(" · ") || "Mixed";
+    return `<article class="outfit" data-id="${o.id}">
+      <div class="photo"><img src="${img(o.photo,480,370)}" srcset="${img(o.photo,480,370)} 480w, ${img(o.photo,960,740)} 960w" sizes="(max-width:620px) 100vw, (max-width:900px) 50vw, 400px" width="480" height="370" alt="${esc(o.alt)}" loading="lazy" decoding="async" onerror="this.parentElement.classList.add('fallback');this.insertAdjacentText('afterend',this.closest('.outfit').querySelector('h3').textContent)">
+        <button type="button" class="save${isSaved?" saved":""}" aria-pressed="${isSaved}" aria-label="Save ${esc(o.title)}">${isSaved?"♥":"♡"}</button>
+        <span class="owned-badge">You own ${have} of ${total}</span></div>
+      <div class="card-body"><div class="card-top"><h3>${esc(o.title)}</h3><span>${OCCASIONS[o.occasion].label}</span></div>
+        <p class="meta">${styleText} · <span class="from">from ${esc(boardName(o.board))}</span></p>
+        <div class="progress" aria-hidden="true"><i style="width:${total ? Math.round(have/total*100) : 0}%"></i></div>
+        <div class="card-actions"><button type="button" class="why">Why this outfit?</button><button type="button" class="detail">View details →</button></div></div>
+    </article>`;
+  }
+  function renderFilters(){
+    const btn = (k, label) => `<button type="button" class="filter${state.filters.has(k)?" selected":""}" data-tag="${k}" aria-pressed="${state.filters.has(k)}">${label}</button>`;
+    $("#filters").innerHTML = Object.entries(STYLES).map(([k,v]) => btn(k, v.label)).join("") + Object.entries(OCCASIONS).map(([k,v]) => btn(k, v.label)).join("");
+  }
+  function renderOnboarding(){
+    const o = $("#onboarding");
+    if (!state.account) {
+      o.innerHTML = `<div><h2>Start with your Pinterest</h2><p>Connect your boards and we'll read your style from what you pin.<span class="demo-tag">Demo account</span></p></div><div><button type="button" class="primary" data-connect>Connect Pinterest</button></div>`;
+    } else {
+      const sample = state.closet.size > 0;
+      o.innerHTML = `<div><h2>Now match your closet</h2><p>Try a sample wardrobe or start empty to see what each pinned look would need.</p></div><div style="display:flex;gap:9px;flex-wrap:wrap"><button type="button" class="outline" id="emptyBtn" aria-pressed="${!sample}">Start empty</button><button type="button" class="primary" id="sampleBtn" aria-pressed="${sample}">Try sample closet</button></div>`;
+      $("#sampleBtn").onclick = () => setCloset(true); $("#emptyBtn").onclick = () => setCloset(false);
+    }
+  }
+  function visible(){
+    const q = state.query.trim().toLowerCase();
+    return state.looks.filter(o => {
+      if (state.view === "saved" && !state.saved.has(o.id)) return false;
+      if (state.view === "foryou" && state.filters.size && !o.tags.some(t => state.filters.has(t))) return false;
+      if (q && !`${o.title} ${o.description} ${boardName(o.board)} ${o.pieces.join(" ")}`.toLowerCase().includes(q)) return false;
+      return true;
+    }).sort((a,b) => state.view === "explore" ? 0 : missing(a).length - missing(b).length);
+  }
+  function render(){
+    const connected = !!state.account;
+    $("#pinBtn").textContent = connected ? `Pinterest · ${plural(state.selected.length, "board")}` : "Connect Pinterest";
+    $("#closetCount").textContent = state.closet.size;
+    $("#connectPanel").hidden = connected;
+    ["#grid","#filters","#occasionBtn","#listSub"].forEach(s => $(s).hidden = !connected);
+    renderOnboarding();
+    if (!connected) { $("#grid").innerHTML = ""; $("#listTitle").textContent = "Your looks"; $("#empty").style.display = "none"; return; }
+    const list = visible();
+    $("#grid").innerHTML = list.map(card).join("");
+    $("#listTitle").textContent = {foryou:"Recommended looks", explore:"All pinned looks", saved:"Saved looks"}[state.view];
+    const top = topStyles().map(s => STYLES[s].label).join(" and ");
+    $("#listSub").textContent = state.view === "foryou"
+      ? `${list.length} of ${plural(state.looks.length, "pin")} from ${plural(state.selected.length, "board")}. Your boards lean ${top || "mixed"}.`
+      : state.view === "saved" ? `${plural(list.length, "saved look")}.` : `${plural(list.length, "look")} from your boards.`;
+    $("#filters").hidden = $("#occasionBtn").hidden = state.view !== "foryou";
+    const none = list.length === 0;
+    $("#empty").style.display = none ? "block" : "none";
+    if (none) {
+      const savedEmpty = state.view === "saved" && !state.query;
+      $("#emptyTitle").textContent = savedEmpty ? "Nothing saved yet" : "No matching looks";
+      $("#emptyText").textContent = savedEmpty ? "Tap the heart on any look to keep it here." : "Try another filter, search term, or add more boards.";
+    }
+  }
+
+  /* ---------- modal ---------- */
+  let lastFocus = null;
+  function openModal(title, html){
+    if (!$("#modal").classList.contains("show")) lastFocus = document.activeElement;
+    $("#modalTitle").textContent = title; $("#modalBody").innerHTML = html;
+    $("#modal").classList.add("show"); $("#close").focus();
+  }
+  function closeModal(){ $("#modal").classList.remove("show"); if (lastFocus && document.contains(lastFocus)) lastFocus.focus(); }
+  $("#close").onclick = closeModal;
+  $("#modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
+  document.addEventListener("keydown", e => {
+    if (!$("#modal").classList.contains("show")) return;
+    if (e.key === "Escape") closeModal();
+    if (e.key === "Tab") {
+      const f = [...$("#modal").querySelectorAll("button")]; const first = f[0], last = f[f.length-1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  let toastTimer;
+  function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2800); }
+
+  /* ---------- Pinterest flow ---------- */
+  function startConnect(){
+    openModal("Connect Pinterest", `<p>This is a demo, so no real Pinterest account is used. You'll sign in as a sample account with 5 boards of outfit pins.</p>
+      <div class="modal-actions"><span class="demo-tag" style="margin:0">Demo · @closetmatch.demo</span><button type="button" class="primary" id="demoSignIn">Continue with demo account</button></div>`);
+    $("#demoSignIn").onclick = async () => {
+      $("#modalBody").innerHTML = `<p class="loading" role="status">Signing in and fetching your boards…</p>`;
+      state.account = await PinterestSource.connect();
+      await showBoardPicker(true);
+    };
+  }
+  async function showBoardPicker(firstTime){
+    if (!state.boards.length) state.boards = await PinterestSource.listBoards();
+    const picked = new Set(firstTime && !state.selected.length ? state.boards.map(b => b.id) : state.selected);
+    openModal("Choose your boards", `<p>Pick the boards to turn into looks. We'll tag each pin by style and occasion.</p>
+      <div class="boards">${state.boards.map(b => `<button type="button" class="board" data-board="${b.id}" aria-pressed="${picked.has(b.id)}"><img src="${img(b.cover,320,192)}" alt="" width="320" height="192" onerror="this.style.visibility='hidden'"><span>${esc(b.name)}<small>${plural(b.pinCount, "pin")}</small></span></button>`).join("")}</div>
+      <div class="modal-actions"><button type="button" class="linkish" id="disconnect">Disconnect Pinterest</button><button type="button" class="primary" id="importBtn"></button></div>`);
+    const update = () => { const n = picked.size; $("#importBtn").textContent = n ? `Import ${plural(n, "board")}` : "Pick at least one board"; $("#importBtn").disabled = !n; };
+    $("#modalBody").querySelectorAll(".board").forEach(b => b.addEventListener("click", () => {
+      const id = b.dataset.board; picked.has(id) ? picked.delete(id) : picked.add(id); b.setAttribute("aria-pressed", picked.has(id)); update();
+    }));
+    update();
+    $("#importBtn").onclick = async () => {
+      state.selected = [...picked];
+      $("#modalBody").innerHTML = `<p class="loading" role="status">Importing pins and building looks…</p>`;
+      await loadLooks(true);
+      closeModal();
+      toast(`Built ${plural(state.looks.length, "look")} from ${plural(state.selected.length, "board")}`);
+    };
+    $("#disconnect").onclick = () => {
+      Object.assign(state, {account:null, boards:[], selected:[], looks:[], filters:new Set(), view:"foryou"});
+      setNav("foryou"); save(); closeModal(); render(); toast("Pinterest disconnected");
+    };
+  }
+  async function loadLooks(resetFilters){
+    const pins = await PinterestSource.listPins(state.selected);
+    state.looks = pins.map(pinToLook);
+    if (resetFilters || !state.filters.size) state.filters = new Set(topStyles());
+    renderFilters(); save(); render();
+  }
+
+  /* ---------- details / why ---------- */
+  const pieceList = (items, cls) => `<ul class="pieces">${items.map(p => `<li class="${cls}">${esc(p)}</li>`).join("")}</ul>`;
+  function showDetails(o){
+    const have = owned(o), need = missing(o);
+    openModal(o.title, `<p>${OCCASIONS[o.occasion].label} · pinned to ${esc(boardName(o.board))}</p>
+      ${have.length ? `<h3>In your closet (${have.length})</h3>${pieceList(have,"have")}` : ""}
+      ${need.length ? `<h3>Missing (${need.length})</h3>${pieceList(need,"need")}<p></p><button type="button" class="primary" id="shop">Add ${plural(need.length, "missing piece")} to shopping list</button>` : `<p>You own every piece. This look is ready to wear.</p>`}`);
+    const shop = $("#shop");
+    if (shop) shop.onclick = () => { need.forEach(p => state.shopping.add(p)); closeModal(); toast(`Added to shopping list · ${plural(state.shopping.size, "item")} total`); };
+  }
+  function showWhy(o){
+    const counts = styleCounts(), top = topStyles();
+    const matched = o.styles.filter(s => top.includes(s));
+    const reasons = [
+      `You pinned it to your “${boardName(o.board)}” board`,
+      matched.length ? `Matches your ${matched.map(s => STYLES[s].label).join(" and ")} style, which shows up in ${matched.map(s => counts[s]).join(" and ")} of your ${state.looks.length} pins` : `Adds some variety beyond your usual ${top.map(s => STYLES[s].label).join(" and ")} pins`,
+      owned(o).length ? `Uses ${owned(o).length} of ${o.pieces.length} pieces already in your closet` : `A starting point to build your closet around`
+    ];
+    openModal("Why this outfit?", `<ul>${reasons.map(r => `<li>${esc(r)}</li>`).join("")}</ul><button type="button" class="outline" id="toDetails">See the pieces</button>`);
+    $("#toDetails").onclick = () => showDetails(o);
+  }
+
+  /* ---------- events ---------- */
+  document.addEventListener("click", e => { if (e.target.closest("[data-connect]")) startConnect(); });
+  $("#pinBtn").onclick = () => state.account ? showBoardPicker(false) : startConnect();
+  $("#grid").addEventListener("click", e => {
+    const art = e.target.closest(".outfit"); if (!art) return;
+    const o = state.looks.find(x => x.id === art.dataset.id);
+    const btn = e.target.closest(".save");
+    if (btn) {
+      const on = !state.saved.has(o.id); on ? state.saved.add(o.id) : state.saved.delete(o.id);
+      btn.classList.toggle("saved", on); btn.setAttribute("aria-pressed", on); btn.textContent = on ? "♥" : "♡";
+      save(); toast(on ? `Saved ${o.title}` : `Removed ${o.title} from saved`);
+      if (state.view === "saved") render();
+      return;
+    }
+    if (e.target.closest(".why")) showWhy(o);
+    if (e.target.closest(".detail")) showDetails(o);
+  });
+  $("#filters").addEventListener("click", e => {
+    const b = e.target.closest(".filter"); if (!b) return;
+    const t = b.dataset.tag, on = !state.filters.has(t);
+    on ? state.filters.add(t) : state.filters.delete(t);
+    b.classList.toggle("selected", on); b.setAttribute("aria-pressed", on); render();
+  });
+  function setNav(view){
+    state.view = view;
+    document.querySelectorAll(".nav button").forEach(b => { const on = b.dataset.view === view; b.classList.toggle("active", on); on ? b.setAttribute("aria-current","page") : b.removeAttribute("aria-current"); });
+  }
+  document.querySelectorAll(".nav button").forEach(btn => btn.addEventListener("click", () => { setNav(btn.dataset.view); render(); }));
+  $("#search").addEventListener("input", e => { state.query = e.target.value; render(); });
+  document.querySelectorAll(".profile-choice").forEach(btn => btn.addEventListener("click", () => {
+    const type = btn.dataset.type, current = state[type];
+    const options = type === "shape" ? ["Hourglass","Pear","Rectangle","Apple","Inverted triangle"] : ["Neutral","Warm","Cool"];
+    openModal(type === "shape" ? "Choose your body shape" : "Choose your undertone",
+      `<p>Your selection helps tailor outfit recommendations to you.</p><div class="choices">${options.map(o => `<button type="button" class="choice" aria-pressed="${o===current}">${o}</button>`).join("")}</div>`);
+    $("#modalBody").querySelectorAll(".choice").forEach(c => c.addEventListener("click", () => {
+      state[type] = c.textContent; $(`#${type}Value`).textContent = c.textContent; save(); closeModal(); toast(`${type === "shape" ? "Shape" : "Undertone"} set to ${c.textContent}`);
+    }));
+  }));
+  function setCloset(sample){
+    state.closet = new Set(sample ? SAMPLE_CLOSET : []); save(); render();
+    toast(sample ? "Sample closet loaded" : "Closet emptied. Every look now shows what you'd need.");
+  }
+  $("#closetBtn").onclick = () => openModal(`My closet · ${state.closet.size}`, state.closet.size ? pieceList([...state.closet].sort(), "have") : `<p>Your closet is empty. Try the sample closet to see how matching works.</p>`);
+  $("#occasionBtn").onclick = () => { $("#filters").scrollIntoView({behavior:"smooth", block:"center"}); const f = $("#filters .filter"); if (f) f.focus({preventScroll:true}); };
+
+  /* ---------- start ---------- */
+  $("#shapeValue").textContent = state.shape; $("#undertoneValue").textContent = state.undertone;
+  render();
+  if (state.account && state.selected.length) PinterestSource.listBoards().then(b => { state.boards = b; return loadLooks(false); });
+  </script>
+</body>
+</html>
