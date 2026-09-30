@@ -96,7 +96,7 @@ flowchart LR
 
 ## Run it locally
 
-Download `index.html` and open it in your browser. That's it.
+Download `index.html` and open it in your browser.
 
 ---
 
